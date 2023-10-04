@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from decouple import config
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = "django-insecure-lh#6vm7tq!%j8w5og3up5u==06sqhctyjehz0hc7w&_v^b50h%"
@@ -53,8 +55,12 @@ WSGI_APPLICATION = "task_manager.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("DATABASE_NAME"),
+        "USER": config("DATABASE_USER"),
+        "PASSWORD": config("DATABASE_PASSWORD"),
+        "HOST": config("DATABASE_HOST"),
+        "PORT": "",
     }
 }
 
@@ -89,12 +95,17 @@ STATIC_ROOT = "static_root"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "accounts.NewUser"
+
 PROFILE_IMAGE_DIR_NAME = "profileimages"
+
 TASK_IMAGE_DIR_NAME = "taskimages"
 
 STATIC_URL = "/static/"
+
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
 MEDIA_ROOT = BASE_DIR / "media"
+
 MEDIA_URL = "/media/"
 
 LANGUAGE_CODE = "en-us"

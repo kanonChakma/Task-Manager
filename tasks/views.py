@@ -2,66 +2,64 @@ from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.core.paginator import Paginator
+from django.db.models import Q
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.views.generic import TemplateView
-from rest_framework import filters, generics, status
+from rest_framework import status
 from rest_framework.parsers import FormParser, MultiPartParser
-from rest_framework.permissions import (
-    SAFE_METHODS,
-    BasePermission,
-    IsAuthenticated,
-    IsAuthenticatedOrReadOnly,
-)
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from .forms import TaskFilterForm, TaskForm, TaskUpdateForm
+from .forms import TaskForm, TaskUpdateForm
 from .models import Task, TaskPhoto
 from .serailizers import TaskSerializer
 
 
 # TEMPLATE VIEW
 class TasksView(TemplateView):
-    model = Task
     template_name = "tasks/home.html"
-    context_object_name = "tasks"
-    paginate_by = 10
+    paginate_by = 9
 
-    def get_queryset(self):
-        queryset = Task.objects.all()
+    def get(self, request, *args, **kwargs):
+        title = request.GET.get("title")
+        created_at_min = request.GET.get("created_at_min")
+        created_at_max = request.GET.get("created_at_max")
+        due_date = request.GET.get("due_date")
+        priority = request.GET.get("priority")
+        is_complete = request.GET.get("is_complete")
 
-        # Filter by title
-        title = self.request.GET.get("title")
+        queryset = Task.objects.select_related("user")
         if title:
             queryset = queryset.filter(title__icontains=title)
 
-        # Filter by creation date
+        # if created_at_min and created_at_max:
+        #     queryset = queryset.filter(
+        #         created_at__range=(created_at_min, created_at_max)
+        #     )
 
-        # Filter by due date
-        due_date = self.request.GET.get("due_date")
-        if due_date:
-            queryset = queryset.filter(due_date__date=due_date)
-
-        # Filter by priority
-        priority = self.request.GET.get("priority")
+        # if due_date:
+        #     queryset = queryset.filter(due_date__date=due_date)
         if priority:
             queryset = queryset.filter(priority=priority)
-
-        # Filter by completion status
-        is_complete = self.request.GET.get("is_complete")
-        if is_complete == "on":
+        if is_complete:
             queryset = queryset.filter(is_complete=True)
+        else:
+            queryset = queryset.filter(Q(is_complete=True) | Q(is_complete=False))
 
-        return queryset
+        # tasks = queryset.all()
+        # Pagination
+        paginator = Paginator(queryset, self.paginate_by)
+        page_number = request.GET.get("page")
+        tasks = paginator.get_page(page_number)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["filter_form"] = TaskFilterForm(self.request.GET)
-        return context
+        context = {"tasks": tasks}
+        return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
         email = request.POST.get("email")
