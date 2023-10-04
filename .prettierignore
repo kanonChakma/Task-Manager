@@ -1,0 +1,5 @@
+*.html
+file.csv
+build
+coverage
+.prettierignore

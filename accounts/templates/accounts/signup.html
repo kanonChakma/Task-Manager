@@ -1,0 +1,71 @@
+{% extends "base.html" %} 
+{% block content %}
+<section class="text-gray-600 body-font relative">
+    <form class="form" action="" method="POST">
+      {% csrf_token %}
+    <div class="container px-5 py-24 mx-auto flex sm:flex-nowrap flex-wrap">
+      <div class="max-w-lg mx-auto bg-white flex flex-col md:ml-auto w-full md:py-8 mt-8 md:mt-0">
+        <h2 class="text-gray-900 text-lg mb-2 text-center font-medium title-font text-uppercase">Register Account</h2>
+
+        <div class="relative mb-4">
+          <label for="name" class="leading-7 text-sm text-gray-600"> {{ form.username.label_tag }}</label>
+          <input placeholder="Enter Your Username" value="{% if form.username.value %}{{ form.username.value }}{% endif %}" type="text" id="name" name="username" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+          {% if form.username.errors %}
+                    <div class="text-red-500">
+                        {{ form.username.errors }}
+                    </div>
+            {% endif %}
+        </div>
+
+        <div class="relative mb-4">
+          <label for="email" class="leading-7 text-sm text-gray-600"> {{ form.email.label_tag }}</label>
+          <input placeholder="Enter Your Email" value="{% if form.email.value %}{{ form.email.value }}{% endif %}" type="email" id="email" name="email" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+           {% if form.email.errors %}
+                  <div class="text-red-500">
+                  {{ form.email.errors }}
+                   </div>
+            {% endif %}
+        </div>
+        <div class="relative mb-4">
+          <label for="password" class="leading-7 text-sm text-gray-600">   {{ form.password1.label_tag }}</label>
+          <input placeholder="Enter Your Password" value="{% if form.password1.value %}{{ form.password1.value }}{% endif %}" type="password" id="email" name="password1" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+          {% if form.password1.errors %}
+                  <div class="text-red-500">
+                  {{ form.password1.errors }}
+                   </div>
+            {% endif %}
+        </div>
+        <div class="relative mb-4">
+          <label for="email" class="leading-7 text-sm text-gray-600">   {{ form.password2.label_tag }}</label>
+          <input placeholder="Enter Your Confirm Password" value="{% if form.password2.value %}{{ form.password2.value }}{% endif %}" type="password" id="email" name="password2" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+          {% if form.password2.errors %}
+          <div class="text-red-500">
+          {{ form.password2.errors }}
+           </div>
+          {% endif %}
+        </div>
+        <button class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg  type="submit">SEND</button>
+        <div class="text-sm text-gray-500 mt-5 flex sm:flex-nowrap flex-wrap">
+          <p>Already signed up yet?</p>
+          <a class="ml-5 text-red-600" href="{% url 'login' %}" class="btn btn--link">Login</a>
+        </div>
+      </div>
+      
+    </div>
+  </form>
+</section>
+{% endblock content %}
+ 
+
+
+<form class="form" action="" method="POST">
+  {% csrf_token %}
+  
+  {% for field in form %}
+  <div class="form__group form__group">
+    <label for="room_name">{{field.label}}</label>
+    {{field}}
+  </div>
+  {% endfor %}
+  <button type="submit"> button</button>
+</form>

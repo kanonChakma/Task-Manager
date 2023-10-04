@@ -1,0 +1,130 @@
+
+{% extends "base.html" %}
+
+{% block title %} update-list {% endblock title %}
+
+{% block content %}
+
+<div class="bg-gray-100 shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-xl mx-auto mt-20">
+  <form method="post"  action=".">
+    {% csrf_token %}
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
+        Title
+      </label>
+      <input
+        value="{{ form.instance.title }}"  
+        name="title"  
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="title" type="text" placeholder="Title">
+
+        {% if form.title.errors %}
+        <p class="text-red-500 text-xs italic">{{ form.title.errors.0 }}</p>
+        {% endif %}
+      
+      </div>
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
+        Description
+      </label>
+      <textarea
+        name="description" 
+        class="h-32 py-2  shadow appearance-none border rounded w-full px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="description" placeholder="Description">{{ form.instance.description }}</textarea>
+
+      {% if form.description.errors %}
+         <p class="text-red-500 text-xs italic">{{ form.description.errors }}</p>
+       {% endif %}
+
+    </div>
+     <div class="mb-4 flex">
+      <div class="w-1/2">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="checkbox">
+          Completed
+        </label>
+        <input
+          name="is_complete"  
+          {% if form.instance.is_complete %}checked{% endif %}  
+          class="mr-2 leading-tight"
+          id="checkbox" type="checkbox">
+        <span class="text-gray-700 text-sm">Is Completed</span>
+        {% if form.is_complete.errors %}
+        <p class="text-red-500 text-xs italic">{{ form.is_complete.errors.0 }}</p>
+        {% endif %}
+      </div>
+      <div class="w-1/2">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="due_date">
+          Due Date
+        </label>
+        <input
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="due_date"
+          type="date"
+          name="due_date"
+          value="{{ formatted_due_date }}"  
+          placeholder="Due Date">
+      </div>
+     </div>
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="option">
+        
+        Priority
+      </label>
+      <select
+        name="priority" 
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="option">
+        <option value="Low" {% if form.instance.priority == "Low" %}selected{% endif %}>Low</option>
+        <option value="Medium" {% if form.instance.priority == "Medium" %}selected{% endif %}>Medium</option>
+        <option value="High" {% if form.instance.priority == "High" %}selected{% endif %}>High</option>
+      </select>
+      {% if form.priority.errors %}
+      <p class="text-red-500 text-xs italic">{{ form.priority.errors.0 }}</p>
+      {% endif %}
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="images">
+        Images
+      </label>
+      <input
+        name="images"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="images"
+        type="file"
+        multiple
+      >
+      
+      {% if form.images.errors %}
+        <p class="text-red-500 text-xs italic">{{ form.images.errors.0 }}</p>
+      {% endif %}
+    </div>
+
+    <div class="flex mb-4">
+      {% for photo in photos %}
+        <div class="w-1/4 p-2 relative">
+          <div class="bg-white shadow-md">
+            
+             <img src="{{ photo.photo.url }}" alt="Task Photo" class="w-full h-14  object-cover">
+             <div class="absolute top-0 right-0 m-2">
+                <a href="{% url 'task_image_delete' photo.id%}">
+                <span class="bg-red-500 text-white py-1 px-2 rounded-full hover:bg-red-600 transition duration-200">
+                    x
+                  <span>
+                </a>  
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="flex items-center justify-between mt-10">
+      <button
+        class="bg-blue-500 w-full hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        type="submit">
+        UPDATE TASK
+      </button>
+    </div>
+  </form>
+</div>
+
+{% endblock content %}

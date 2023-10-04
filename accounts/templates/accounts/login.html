@@ -1,0 +1,58 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>{% block title %}{% endblock title %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+ 
+    <main class="max-w-7xl mx-auto">
+      <section class="text-gray-600 body-font relative">
+        <form class="form" action="" method="POST">
+            {% csrf_token %}
+          <div class="container px-5 py-24 mx-auto flex sm:flex-nowrap flex-wrap">
+            <div class="max-w-lg mx-auto bg-white flex flex-col md:ml-auto w-full md:py-8 mt-8 md:mt-0">
+          
+              <div class="relative mb-4">
+                <label for="email" class="leading-7 text-sm text-gray-600">Email</label>
+                <input type="email" placeholder="Enter your email" id="email" name="email" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                {% if form.email.errors %}
+                  <div class="text-red-500">
+                    {{ form.email.errors }}
+                  </div>
+                {% endif %}
+              </div>
+              <div class="relative mb-4">
+                <label for="password" class="leading-7 text-sm text-gray-600"> Password</label>
+                <input type="password"  placeholder="Enter your password" id="password" name="password" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                {% if form.password.errors %}
+                <div class="text-red-500">
+                  {{ form.password.errors }}
+                </div>
+              {% endif %}
+              </div>
+           
+              <button class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg  type="submit">Login</button>
+              <div class="text-sm text-gray-500 mt-5 flex sm:flex-nowrap flex-wrap">
+                <p>Haven't signed up yet?</p>
+                <a class="ml-5 text-red-600" href="{% url 'signup' %}" class="btn btn--link">Register</a>
+              </div>
+            </div>
+            
+          </div>
+        </form>
+      </section>
+    </main>
+   
+  </body>
+</html>
+
+ 
+
+
